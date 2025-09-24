@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xolitos/mapa.dart';
+import 'package:xolitos/pages/init_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,11 +12,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Mi Aplicación de Mapas',
+      title: 'AGROORBIT',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MapScreen(), // Aquí se establece la página del mapa como la pantalla de inicio
+        primarySwatch: Colors.blue),
+      initialRoute: '/init',
+      routes: {
+        '/init': (_) => const InitPage(),  // tu “template” de inicio
+        '/map':  (_) => const MapScreen(), // tu página de mapa
+        // agrega aquí más templates…
+      },
     );
   }
 }
