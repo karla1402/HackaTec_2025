@@ -271,7 +271,12 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           //Aquí va a modificarse para mandar a mapa
-                          //Aquí debe ir el inicio de sesión
+                          if (_usernameController.text == 'Juan Pérez' && _passwordController.text == '12345678') {
+                            print('Login exitoso');
+                            Navigator.pushReplacementNamed(context, '/map'); //Cambiar ruta si es necesario Martín
+                          } else {
+                            print('Credenciales incorrectas');
+                          }
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Iniciando sesión...'),

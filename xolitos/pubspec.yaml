@@ -37,7 +37,6 @@ dependencies:
   fl_heatmap: ^0.4.5 # Librería para mapas de calor
   google_sign_in: ^6.2.1 # Librería para autenticación con Google
   geolocator: ^11.0.0 # Librería para obtener la ubicación del dispositivo
-  google_sign_in: ^6.2.1 # Librería para autenticación con Google
   http: ^1.1.0 # Librería para hacer solicitudes HTTP
 
   # The following adds the Cupertino Icons font to your application.
