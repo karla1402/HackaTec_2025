@@ -1,75 +1,76 @@
+// Archivo: termo.dart (Versión refactorizada y vertical)
+
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fl_heatmap/fl_heatmap.dart';
 
-class HeatmapPage extends StatefulWidget {
-  const HeatmapPage({super.key});
+class MatrixHeatmapVertical extends StatefulWidget {
+  // 1. Agregar las propiedades 'rows' y 'cols' al constructor
+  final List<String> rows;
+  final List<String> cols;
+
+  const MatrixHeatmapVertical({super.key, required this.rows,
+    required this.cols,});
 
   @override
-  State<HeatmapPage> createState() => _HeatmapPageState();
+  State<MatrixHeatmapVertical> createState() => _MatrixHeatmapVerticalState();
 }
 
-class _HeatmapPageState extends State<HeatmapPage> {
+class _MatrixHeatmapVerticalState extends State<MatrixHeatmapVertical> {
   late HeatmapData heatmapData;
   HeatmapItem? selectedItem;
 
   @override
   void initState() {
     super.initState();
-    _generateExampleData();
+    _generateHeatmapData(widget.rows, widget.cols);
   }
 
-  void _generateExampleData() {
-    const rows = ['2022', '2021', '2020', '2019'];
-    const cols = [
-      'Jan', 'Feb', 'Mar', 'Apr',
-      'May', 'Jun', 'Jul', 'Aug',
-      'Sep', 'Oct', 'Nov', 'Dec'
-    ];
+  void _generateHeatmapData(List<String> dynamicRows, List<String> dynamicCols) {
 
     final random = Random();
     heatmapData = HeatmapData(
-      rows: rows,
-      columns: cols,
+      rows: dynamicRows, // Se invierten las filas y columnas
+      columns: dynamicCols, // Se invierten las filas y columnas
       items: [
-        for (int y = 0; y < rows.length; y++)
-          for (int x = 0; x < cols.length; x++)
+        for (int y = 0; y < dynamicCols.length; y++) // Se usa cols para el bucle y
+          for (int x = 0; x < dynamicRows.length; x++) // Se usa rows para el bucle x
             HeatmapItem(
               value: random.nextDouble() * 10,
               unit: 'kWh',
-              xAxisLabel: cols[x],
-              yAxisLabel: rows[y],
+              xAxisLabel: dynamicRows[x],
+              yAxisLabel: dynamicCols[y],
             ),
       ],
+      selectedColor: Colors.blue,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Heatmap tipo matriz")),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 16),
-            Text(
-              selectedItem != null
-                  ? 'Valor: ${selectedItem!.value.toStringAsFixed(2)} ${selectedItem!.unit}\n(${selectedItem!.yAxisLabel} - ${selectedItem!.xAxisLabel})'
-                  : 'Selecciona una celda',
-              style: const TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            Heatmap(
-              heatmapData: heatmapData,
-              rowsVisible: 4, // filas visibles a la vez
-              onItemSelectedListener: (HeatmapItem? item) {
-                setState(() => selectedItem = item);
-              },
-            ),
-          ],
+    return Column(
+      children: [
+        Text(
+          selectedItem != null
+              ? 'Valor: ${selectedItem!.value.toStringAsFixed(2)} ${selectedItem!.unit}\n(${selectedItem!.yAxisLabel} - ${selectedItem!.xAxisLabel})'
+              : 'Selecciona una celda',
+          style: const TextStyle(fontSize: 16),
+          textAlign: TextAlign.center,
         ),
-      ),
+        const SizedBox(height: 12),
+        Expanded(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.3, // controla ancho
+              child: Heatmap(
+                  heatmapData: heatmapData,
+                  rowsVisible: heatmapData.rows.length,
+                  onItemSelectedListener: (HeatmapItem? item) {
+                    setState(() => selectedItem = item);
+                  },
+                ),
+            ),
+        ),
+      ],
     );
   }
 }
