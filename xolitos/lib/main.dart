@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:xolitos/mapa.dart';
 import 'package:xolitos/pages/init_page.dart';
+import 'package:xolitos/pages/login_pages.dart';
+import 'package:xolitos/pages/aboutUs_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,13 +15,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'AGROORBIT',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue),
+        primarySwatch: Colors.blue,
+        fontFamily: 'Inter', // <- mueve aquí tu fuente
+      ),
       initialRoute: '/init',
       routes: {
-        '/init': (_) => const InitPage(),  // tu “template” de inicio
-        '/map':  (_) => const MapScreen(), // tu página de mapa
-        // agrega aquí más templates…
+        '/init': (_) => const InitPage(),
+        '/map':  (_) => const MapScreen(),
+        '/login':  (_) => const AgriculturalLoginScreen(),
+        '/business':  (_) => const BusinessLandingPage()
+        // '/about': (_) => const AboutPage(), // cuando la tengas
       },
     );
   }

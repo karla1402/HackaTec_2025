@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+// Este es el Client ID que obtuviste de la Google Cloud Console
+// para la plataforma web.
+final GoogleSignIn _googleSignIn = GoogleSignIn(
+  clientId: '86009060056-b3qfkttk4kmcnodr0nfkid37pcc8stnl.apps.googleusercontent.com',
+);
 
 class AgriculturalLoginScreen extends StatefulWidget {
   const AgriculturalLoginScreen({super.key});
@@ -11,20 +18,34 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
+  Future<void> _signInWithGoogle(BuildContext context) async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser != null) {
+        // Navega a otra pantalla o actualiza el estado de la UI
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Sesión iniciada como: ${googleUser.displayName}'),
+          ),
+        );
+      }
+    } catch (error) {
+      print('Error de autenticación: $error');
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           // Imagen de fondo
-          // AQUÍ PUEDES CAMBIAR LA IMAGEN DE FONDO
-          // Reemplaza 'assets/images/agricultural_background.jpg' por la ruta de tu imagen
           Container(
             width: double.infinity,
             height: double.infinity,
             decoration: BoxDecoration(
               image: DecorationImage(
-                // CAMBIAR AQUÍ: Reemplaza por tu imagen agrícola/satelital
                 image: AssetImage('assets/images/agriculture_background.png'),
                 fit: BoxFit.cover,
               ),
@@ -40,8 +61,8 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Color(0xFF08A20D).withOpacity(0.7),
-                  Color(0xFF08A20D).withOpacity(0.4),
+                  Color.fromARGB(255, 255, 255, 255).withOpacity(0.7),
+                  Color.fromARGB(255, 3, 129, 10).withOpacity(0.5),
                   Colors.black.withOpacity(0.3),
                 ],
               ),
@@ -54,37 +75,30 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
             left: 30,
             child: Row(
               children: [
-                Container(
-                  width: 40,
+                Image.asset(
+                  'assets/images/Isologo.png',
                   height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.satellite_alt,
-                    color: Color(0xFF08A20D),
-                    size: 24,
-                  ),
+                  fit: BoxFit.contain,
+                  filterQuality: FilterQuality.high,
                 ),
                 SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'AGROSAT',
+                      'AGROORBIT',
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
+                        color: Colors.black,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.2,
                       ),
                     ),
                     Text(
-                      'AGRICULTURAL DATA',
+                      'Monitoreo Satelital Inteligente.',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
-                        fontSize: 10,
+                        color: Colors.black.withOpacity(0.8),
+                        fontSize: 14,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -94,15 +108,15 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
             ),
           ),
           
-          // Formulario de login centrado a la izquierda
-          Positioned(
-            left: 60,
-            top: 0,
-            bottom: 0,
-            child: Center(
+          // Formulario de login centrado y responsivo
+          // Se elimina el widget Positioned para que el formulario se centre.
+          // Se usa ConstrainedBox para limitar el ancho en pantallas grandes.
+          Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 450),
               child: Container(
-                width: 380,
-                padding: EdgeInsets.all(40),
+                // Se elimina el width fijo para que se adapte al ancho disponible
+                padding: const EdgeInsets.all(40),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
@@ -110,7 +124,7 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                     BoxShadow(
                       color: Colors.black.withOpacity(0.2),
                       blurRadius: 30,
-                      offset: Offset(0, 10),
+                      offset: const Offset(0, 10),
                     ),
                   ],
                 ),
@@ -124,10 +138,10 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey[800],
+                        color: const Color.fromARGB(255, 73, 80, 73),
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       'Por favor, ingresa tus datos para continuar',
                       style: TextStyle(
@@ -136,7 +150,7 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                       ),
                     ),
                     
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     
                     // Campo de usuario
                     Column(
@@ -150,7 +164,7 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                             color: Colors.grey[700],
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         TextField(
                           controller: _usernameController,
                           decoration: InputDecoration(
@@ -162,7 +176,7 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Color(0xFF08A20D), width: 2),
+                              borderSide: const BorderSide(color: Color(0xFF08A20D), width: 2),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -170,13 +184,13 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                             ),
                             filled: true,
                             fillColor: Colors.grey[50],
-                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                           ),
                         ),
                       ],
                     ),
                     
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     
                     // Campo de contraseña
                     Column(
@@ -190,7 +204,7 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                             color: Colors.grey[700],
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         TextField(
                           controller: _passwordController,
                           obscureText: !_isPasswordVisible,
@@ -214,7 +228,7 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Color(0xFF08A20D), width: 2),
+                              borderSide: const BorderSide(color: Color(0xFF08A20D), width: 2),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -222,13 +236,13 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                             ),
                             filled: true,
                             fillColor: Colors.grey[50],
-                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                           ),
                         ),
                       ],
                     ),
                     
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     
                     // Enlace "Forgot password?"
                     Align(
@@ -240,14 +254,14 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                         child: Text(
                           'Olvidaste tu contraseña?',
                           style: TextStyle(
-                            color: Color(0xFF08A20D),
+                            color: const Color(0xFF08A20D),
                             fontSize: 14,
                           ),
                         ),
                       ),
                     ),
                     
-                    SizedBox(height: 32),
+                    const SizedBox(height: 32),
                     
                     // Botón de Sign In
                     Container(
@@ -256,25 +270,23 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           //Aquí va a modificarse para mandar a mapa
-                          print('Username: ${_usernameController.text}');
-                          print('Password: ${_passwordController.text}');
-                          
+                          //Aquí debe ir el inicio de sesión
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text('Iniciando sesión...'),
                               backgroundColor: Color(0xFF08A20D),
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[800],
+                          backgroundColor: const Color.fromARGB(255, 0, 77, 4), 
                           foregroundColor: Colors.white,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: Text(
+                        child: const Text(
                           'Iniciar sesión',
                           style: TextStyle(
                             fontSize: 16,
@@ -284,7 +296,60 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                       ),
                     ),
                     
-                    SizedBox(height: 32),
+                    const SizedBox(height: 32),
+                    
+                    // --- SECCIÓN AÑADIDA PARA GOOGLE AUTH ---
+                    const Center(
+                      child: Text(
+                        'o',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 24),
+                    
+                    // Botón de Iniciar Sesión con Google
+                    Container(
+                      width: double.infinity,
+                      height: 54,
+                      child: ElevatedButton(
+                        onPressed: () => _signInWithGoogle(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.grey[800],
+                          elevation: 0,
+                          side: BorderSide(color: Colors.grey[300]!, width: 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Aquí puedes añadir un icono de Google si tienes el asset
+                            // Por ejemplo: Image.asset('assets/google_logo.png', height: 24),
+                            // O un icono simple:
+                            Icon(Icons.g_mobiledata, color: Colors.blue[600], size: 30),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Iniciar sesión con Google',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // --- FIN DE LA SECCIÓN AÑADIDA ---
+                    
+                    const SizedBox(height: 32),
                     
                     // Texto de registro
                     Center(
@@ -307,7 +372,7 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                               minimumSize: Size.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
-                            child: Text(
+                            child: const Text(
                               'Crea tu cuenta',
                               style: TextStyle(
                                 color: Color(0xFF08A20D),
@@ -323,7 +388,7 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                 ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );
