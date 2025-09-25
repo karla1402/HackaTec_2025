@@ -272,17 +272,21 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                         onPressed: () {
                           //Aquí va a modificarse para mandar a mapa
                           if (_usernameController.text == 'Juan Pérez' && _passwordController.text == '12345678') {
-                            print('Login exitoso');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Iniciando sesión...'),
+                                backgroundColor: Color(0xFF08A20D),
+                              ),
+                            );
                             Navigator.pushReplacementNamed(context, '/map'); //Cambiar ruta si es necesario Martín
                           } else {
-                            print('Credenciales incorrectas');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Credenciales inválidas'),
+                                backgroundColor: Color.fromARGB(255, 189, 6, 6),
+                              ),
+                            );
                           }
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Iniciando sesión...'),
-                              backgroundColor: Color(0xFF08A20D),
-                            ),
-                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color.fromARGB(255, 0, 77, 4), 
