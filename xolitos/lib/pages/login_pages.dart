@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:google_sign_in/google_sign_in.dart';
 
 // Este es el Client ID que obtuviste de la Google Cloud Console
@@ -36,20 +35,18 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           // Imagen de fondo
-          // AQUÍ PUEDES CAMBIAR LA IMAGEN DE FONDO
-          // Reemplaza 'assets/images/agricultural_background.jpg' por la ruta de tu imagen
           Container(
             width: double.infinity,
             height: double.infinity,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                // CAMBIAR AQUÍ: Reemplaza por tu imagen agrícola/satelital
                 image: AssetImage('assets/images/agriculture_background.png'),
                 fit: BoxFit.cover,
               ),
@@ -65,8 +62,8 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  const Color(0xFF08A20D).withOpacity(0.7),
-                  const Color(0xFF08A20D).withOpacity(0.4),
+                  Color.fromARGB(255, 255, 255, 255).withOpacity(0.7),
+                  Color.fromARGB(255, 3, 129, 10).withOpacity(0.5),
                   Colors.black.withOpacity(0.3),
                 ],
               ),
@@ -79,37 +76,30 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
             left: 30,
             child: Row(
               children: [
-                Container(
-                  width: 40,
+                Image.asset(
+                  'assets/images/Isologo.png',
                   height: 40,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.satellite_alt,
-                    color: Color(0xFF08A20D),
-                    size: 24,
-                  ),
+                  fit: BoxFit.contain,
+                  filterQuality: FilterQuality.high,
                 ),
                 const SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'AGROSAT',
+                    Text(
+                      'AGROORBIT',
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
+                        color: Colors.black,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.2,
                       ),
                     ),
                     Text(
-                      'AGRICULTURAL DATA',
+                      'Monitoreo Satelital Inteligente.',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
-                        fontSize: 10,
+                        color: Colors.black.withOpacity(0.8),
+                        fontSize: 14,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -149,7 +139,7 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey[800],
+                        color: const Color.fromARGB(255, 73, 80, 73),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -290,7 +280,7 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[800],
+                          backgroundColor: const Color.fromARGB(255, 0, 77, 4), 
                           foregroundColor: Colors.white,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
@@ -399,7 +389,7 @@ class _AgriculturalLoginScreenState extends State<AgriculturalLoginScreen> {
                 ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );

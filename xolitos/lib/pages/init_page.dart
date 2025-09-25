@@ -5,15 +5,7 @@ class InitPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'AgroOrbit',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        fontFamily: 'Inter',
-      ),
-      home: const AgroOrbitLandingPage(),
-      debugShowCheckedModeBanner: false,
-    );
+    return const AgroOrbitLandingPage(); // <-- solo tu contenido
   }
 }
 
@@ -27,18 +19,15 @@ class AgroOrbitLandingPage extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          // AQUÍ DEBES AÑADIR TU IMAGEN DE FONDO
-          // Reemplaza 'assets/images/agriculture_background.jpg' con la ruta de tu imagen
           image: DecorationImage(
-            image: AssetImage('assets/images/agriculture_background.jpg'),
+            image: AssetImage('assets/images/agriculture_background.png'),
             fit: BoxFit.cover,
           ),
         ),
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+              begin: Alignment.topCenter, end: Alignment.bottomCenter,
               colors: [
                 Colors.black.withOpacity(0.3),
                 Colors.black.withOpacity(0.1),
@@ -53,61 +42,107 @@ class AgroOrbitLandingPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.8),
+                      color: Colors.white.withOpacity(0.8),
                       borderRadius: BorderRadius.circular(50),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Logo
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Icon(
-                            Icons.eco,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
                         const SizedBox(width: 12),
-                        const Text(
-                          'AgroOrbit',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                        // Logo (no clickeable)
+                        Image.asset(
+                          'assets/images/Isologo.png',
+                          height: 40,                  // ajusta tamaño a tu gusto
+                          fit: BoxFit.contain,
+                          filterQuality: FilterQuality.high,
+                        ),
+                        const SizedBox(width: 5),
+                        Image.asset(
+                          'assets/images/nombreLogo1.png',
+                          height: 30,                  // ajusta tamaño a tu gusto
+                          fit: BoxFit.contain,
+                          filterQuality: FilterQuality.high,
+                        ),
+                        const SizedBox(width: 60),
+                        // Navigation Items (clickeables)
+                        NavItem(
+                          text: 'Inicio',
+                          color: const Color.fromARGB(255, 0, 145, 17),
+                          fontSize: 20,
+                          isActive: true,
+                          onTap: () {
+                            // Si ya estás en /init, no navegues
+                            if (ModalRoute.of(context)?.settings.name != '/init') {
+                              Navigator.of(context).pushNamedAndRemoveUntil('/init', (r) => false);
+                            }
+                          },
+                        ),
+                        const SizedBox(width: 30),
+                        NavItem(
+                          text: 'Sobre Nosotros',
+                          color: Colors.black,
+                          fontSize: 20,
+                          onTap: () {
+                            Navigator.pushNamed(context, '/business'); //ruta
+                          },
+                        ),
+                        const SizedBox(width: 30),
+                        const Spacer(),
+
+                        // Registrarse (funciona como botón; navegación comentada)
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(20),
+                            onTap: () {
+                              // Navigator.pushNamed(context, '/register');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Registrarse...'),
+                                  backgroundColor: Color(0xFF08A20D)
+                                )
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF9ACD32),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Text(
+                                'Registrarse',
+                                style: TextStyle(
+                                  color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 40),
-                        // Navigation Items
-                        const NavItem(text: 'Home', isActive: true),
-                        const SizedBox(width: 30),
-                        const NavItem(text: 'About Us'),
-                        const SizedBox(width: 30),
-                        const NavItem(text: 'Products'),
-                        const SizedBox(width: 30),
-                        const NavItem(text: 'Features'),
-                        const SizedBox(width: 30),
-                        const NavItem(text: 'Blog'),
-                        const Spacer(),
-                        // Contact Us Button
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.green,
+
+                        const SizedBox(width: 12),
+
+                        // Entrar (funciona como botón; navegación comentada)
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
                             borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Text(
-                            'Contact Us',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
+                            onTap: () {
+                              Navigator.pushNamed(context, '/login');
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF9ACD32),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Text(
+                                'Entrar',
+                                style: TextStyle(
+                                  color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -115,216 +150,74 @@ class AgroOrbitLandingPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 const Spacer(flex: 2),
-                
-                // Star Rating
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.star, color: Colors.yellow, size: 20),
-                      const SizedBox(width: 8),
-                      const Text(
-                        '4.5 Star Rating',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                
-                const SizedBox(height: 30),
-                
-                // Main Title
+
+                // Títulos…
                 const Text(
-                  'Grow Green, Grow Better',
+                  'Monitoreo Satelital',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 64,
-                    fontWeight: FontWeight.bold,
-                    height: 1.1,
+                    color: Colors.white, fontSize: 74, fontWeight: FontWeight.bold, height: 1.1,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                
                 const Text(
-                  'Empowering Agriculture',
+                  'Inteligente',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 64,
-                    fontWeight: FontWeight.bold,
-                    height: 1.1,
+                    color: Colors.white, fontSize: 74, fontWeight: FontWeight.bold, height: 1.1,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                
                 const SizedBox(height: 20),
-                
-                // Subtitle
+
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40),
                   child: Text(
-                    'Discover sustainable farming solutions and connect with the future of agriculture.',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    'Innovar para cosechar.',
+                    style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                
+
                 const SizedBox(height: 40),
-                
-                // Action Buttons
+
+                // CTA
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF9ACD32),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
                         borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            'Get Started',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        onTap: () {
+                          Navigator.pushNamed(context, '/login');
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF9ACD32),
+                            borderRadius: BorderRadius.circular(30),
                           ),
-                          const SizedBox(width: 8),
-                          const Icon(Icons.arrow_forward, color: Colors.black, size: 18),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: const Text(
-                        'Learn More',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              Text(
+                                'Empezar Ahora',
+                                style: TextStyle(
+                                  color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Icon(Icons.arrow_forward, color: Colors.black, size: 18),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                
+
                 const Spacer(flex: 3),
-                
-                // Bottom Elements
-                Padding(
-                  padding: const EdgeInsets.all(40),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // User Count
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // User Avatars
-                            Stack(
-                              children: [
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue,
-                                    borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(color: Colors.white, width: 2),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 20,
-                                  child: Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(color: Colors.white, width: 2),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 40,
-                                  child: Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: Colors.orange,
-                                      borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(color: Colors.white, width: 2),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(width: 50),
-                            const Text(
-                              '12k+ User',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      
-                      // Scroll Now Button
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                              'Stroll Now',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            const Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 18),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),
@@ -337,21 +230,44 @@ class AgroOrbitLandingPage extends StatelessWidget {
 class NavItem extends StatelessWidget {
   final String text;
   final bool isActive;
+  final VoidCallback? onTap;
+  final Color color;
+  final Color? activeColor;
+   final double fontSize;
 
   const NavItem({
     super.key,
     required this.text,
     this.isActive = false,
+    this.onTap,
+    this.color = Colors.black,
+    this.fontSize = 16, 
+    this.activeColor
   });
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-        color: isActive ? Colors.white : Colors.white.withOpacity(0.8),
-        fontSize: 14,
-        fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+    final effectiveColor = isActive ? (activeColor ?? color) : color;
+
+    return MouseRegion(
+      cursor: onTap != null ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(6),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 4.0),
+            child: Text(
+              text,
+              style: TextStyle(
+                color: effectiveColor,
+                fontSize: 16,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
