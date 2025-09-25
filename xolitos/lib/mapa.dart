@@ -15,6 +15,9 @@ class _MapScreenState extends State<MapScreen> {
   bool _isLoading = true;
 
   List<LatLng> points = [];
+  bool _isDrawing = true;
+  String? _error;
+  bool _submitting = false;
 
   @override
   void initState() {
@@ -50,79 +53,187 @@ class _MapScreenState extends State<MapScreen> {
       return const Center(child: Text("Unable to get your location."));
     }
 
+    final parcelArgs = ModalRoute.of(context)?.settings.arguments;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Selecciona un área')),
-      body: FlutterMap(
-        options: MapOptions(
-          initialCenter: _currentLocation!,
-          initialZoom: 13.0,
-          onTap: (tapPosition, point) {
-            setState(() {
-              points.add(point);
-            });
-          },
-        ),
+      appBar: AppBar(title: const Text('Delimita tu parcela')),
+      body: Stack(
         children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.xolitos.app',
+          FlutterMap(
+            options: MapOptions(
+              initialCenter: _currentLocation!,
+              initialZoom: 14.0,
+              onTap: (tapPosition, point) {
+                if (!_isDrawing) return;
+                setState(() {
+                  points.add(point);
+                });
+              },
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                userAgentPackageName: 'com.xolitos.app',
+              ),
+              if (points.isNotEmpty)
+                PolygonLayer(
+                  polygons: [
+                    Polygon(
+                      points: points,
+                      color: Colors.green.withOpacity(0.25),
+                      isFilled: true,
+                      borderColor: Colors.green.shade700,
+                      borderStrokeWidth: 2,
+                    ),
+                  ],
+                ),
+              if (points.isNotEmpty)
+                MarkerLayer(
+                  markers: points
+                      .map(
+                        (p) => Marker(
+                          point: p,
+                          child: const Icon(
+                            Icons.place,
+                            color: Colors.red,
+                            size: 24,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+            ],
           ),
-          PolygonLayer(
-            polygons: [
-              Polygon(
-                points: points,
-                color: Colors.blue.withOpacity(0.5),
-                isFilled: true,
-                borderColor: Colors.blue,
-                borderStrokeWidth: 2,
+          Positioned(
+            top: 16,
+            left: 16,
+            right: 16,
+            child: Card(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      _isDrawing ? Icons.gesture : Icons.check_circle,
+                      color: Colors.green.shade700,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        _isDrawing
+                            ? 'Toca en el mapa para agregar vértices. Mínimo 3 puntos.'
+                            : 'Revisa la selección y envía para análisis.',
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          if (_error != null)
+            Positioned(
+              bottom: 120,
+              left: 16,
+              right: 16,
+              child: Card(
+                color: Colors.red.shade600,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    _error!,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: points.isEmpty
+                      ? null
+                      : () {
+                          setState(() {
+                            points.removeLast();
+                          });
+                        },
+                  icon: const Icon(Icons.undo),
+                  label: const Text('Deshacer'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: points.isEmpty
+                      ? null
+                      : () {
+                          setState(() {
+                            points.clear();
+                            _isDrawing = true;
+                          });
+                        },
+                  icon: const Icon(Icons.delete_sweep_outlined),
+                  label: const Text('Limpiar'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: () {
+                    if (_isDrawing) {
+                      if (points.length < 3) {
+                        setState(() {
+                          _error =
+                              'Agrega al menos 3 puntos para cerrar el polígono.';
+                        });
+                        return;
+                      }
+                      setState(() {
+                        _error = null;
+                        _isDrawing = false;
+                      });
+                      return;
+                    }
+
+                    final polygon = [...points, points.first];
+                    final coordinates = polygon
+                        .map((p) => [p.latitude, p.longitude])
+                        .toList();
+
+                    setState(() {
+                      _submitting = true;
+                    });
+                    // Hand over to previous screen to trigger API or handle inline
+                    Navigator.pop(context, {
+                      'geometry': coordinates,
+                      'parcel': parcelArgs,
+                    });
+                  },
+                  icon: Icon(_isDrawing ? Icons.check : Icons.send),
+                  label: Text(
+                    _isDrawing
+                        ? 'Cerrar'
+                        : (_submitting ? 'Enviando...' : 'Enviar'),
+                  ),
+                ),
               ),
             ],
           ),
-          MarkerLayer(
-            markers: points
-                .map(
-                  (point) => Marker(
-                    point: point,
-                    child: const Icon(Icons.location_on, color: Colors.red),
-                  ),
-                )
-                .toList(),
-          ),
-        ],
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment
-            .end, // Alinea los botones al final de la pantalla (abajo)
-        children: [
-          FloatingActionButton.extended(
-            onPressed: () {
-              // Lógica para enviar el área al backend
-              if (points.isNotEmpty) {
-                // Cierra el polígono (opcional)
-                points.add(points.first);
-
-                final formattedPoints = points
-                    .map((p) => [p.latitude, p.longitude])
-                    .toList();
-                print('Enviando al backend: $formattedPoints');
-              }
-            },
-            label: const Text('Enviar área'),
-            icon: const Icon(Icons.send),
-          ),
-          const SizedBox(height: 10), // Espacio entre los botones
-          FloatingActionButton.extended(
-            onPressed: () {
-              // Lógica para limpiar la selección
-              setState(() {
-                points.clear();
-              });
-              print('Puntos limpiados');
-            },
-            label: const Text('Limpiar'),
-            icon: const Icon(Icons.clear),
-          ),
-        ],
+        ),
       ),
     );
   }

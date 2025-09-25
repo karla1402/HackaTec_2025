@@ -3,6 +3,9 @@ import 'package:xolitos/mapa.dart';
 import 'package:xolitos/pages/init_page.dart';
 import 'package:xolitos/pages/login_pages.dart';
 import 'package:xolitos/pages/aboutUs_page.dart';
+import 'package:xolitos/pages/parcel_form.dart';
+import 'package:xolitos/theme/app_theme.dart';
+import 'package:xolitos/pages/dashboard.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,16 +19,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'AGROORBIT',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'Inter', // <- mueve aquí tu fuente
-      ),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.light,
       initialRoute: '/init',
       routes: {
         '/init': (_) => const InitPage(),
-        '/map':  (_) => const MapScreen(),
-        '/login':  (_) => const AgriculturalLoginScreen(),
-        '/business':  (_) => const BusinessLandingPage()
+        '/map': (_) => const MapScreen(),
+        '/login': (_) => const AgriculturalLoginScreen(),
+        '/business': (_) => const BusinessLandingPage(),
+        '/parcel': (_) => const ParcelFormPage(),
+        '/dashboard': (_) => const DashboardPage(),
         // '/about': (_) => const AboutPage(), // cuando la tengas
       },
     );

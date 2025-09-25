@@ -35,6 +35,7 @@ dependencies:
   latlong2: ^0.9.0 # Librería para manejar coordenadas de latitud y longitud
   geodesy: ^0.5.0 # Útil para cálculos con coordenadas
   fl_heatmap: ^0.4.5 # Librería para mapas de calor
+  flutter_map_heatmap: any
   google_sign_in: ^6.2.1 # Librería para autenticación con Google
   geolocator: ^11.0.0 # Librería para obtener la ubicación del dispositivo
   http: ^1.1.0 # Librería para hacer solicitudes HTTP
@@ -42,6 +43,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  flutter_markdown: ^0.7.7+1
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +68,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - response.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:
