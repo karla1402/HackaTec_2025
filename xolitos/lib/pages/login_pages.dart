@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AgriculturalLoginScreen extends StatefulWidget {
+  const AgriculturalLoginScreen({super.key});
   @override
   _AgriculturalLoginScreenState createState() => _AgriculturalLoginScreenState();
 }
